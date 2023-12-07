@@ -1,5 +1,6 @@
 import { StatusBar, StyleSheet } from "react-native";
 import { Colors } from "utils/colors";
+import { Constants } from "utils/constants";
 
 export default StyleSheet.create({
   container: {
@@ -49,7 +50,7 @@ export default StyleSheet.create({
     borderColor: Colors.dark,
     borderWidth: 1.3,
     backgroundColor: Colors.lightSemiTransparent,
-    borderRadius: 8,
+    borderRadius: Constants.borderRadius,
     paddingVertical: 10,
     width: "70%",
   },
