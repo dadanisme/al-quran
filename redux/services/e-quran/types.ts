@@ -16,6 +16,7 @@ interface Ayat {
   ar: string;
   tr: string;
   idn: string;
+  tafsir: string;
 }
 
 interface SurahData {

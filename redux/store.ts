@@ -7,7 +7,9 @@ export const store = configureStore({
   },
 
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(quranApi.middleware),
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }).concat(quranApi.middleware),
 });
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

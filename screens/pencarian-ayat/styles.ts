@@ -3,6 +3,11 @@ import { Colors } from "utils/colors";
 import { Constants } from "utils/constants";
 
 export default StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   container: {
     flex: 1,
     backgroundColor: Colors.light,

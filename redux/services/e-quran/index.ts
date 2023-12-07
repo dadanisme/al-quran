@@ -15,8 +15,20 @@ const quranApi = createApi({
     tafsir: builder.query<TafsirData, number>({
       query: (id) => `/tafsir/${id}`,
     }),
+    localSurah: builder.query<SurahData[], void>({
+      queryFn(arg, api, extraOptions, baseQuery) {
+        const data = require("dataset/suratWithTafsir.json");
+
+        return { data };
+      },
+    }),
   }),
 });
 
-export const { useAllSurahQuery, useSurahQuery, useTafsirQuery } = quranApi;
+export const {
+  useAllSurahQuery,
+  useSurahQuery,
+  useTafsirQuery,
+  useLocalSurahQuery,
+} = quranApi;
 export default quranApi;
