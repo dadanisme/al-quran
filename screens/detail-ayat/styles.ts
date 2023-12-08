@@ -49,4 +49,18 @@ export default StyleSheet.create({
     color: Colors.dark,
     textAlign: "left",
   },
+  audioHeader: {
+    flexDirection: "row",
+    width: "100%",
+    borderBottomColor: Colors.dark,
+    borderBottomWidth: 1,
+    justifyContent: "center",
+    gap: 2,
+    paddingBottom: 10,
+  },
+  audioTextHeader: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: Colors.dark,
+  },
 });
