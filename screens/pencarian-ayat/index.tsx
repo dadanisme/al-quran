@@ -53,8 +53,16 @@ function PencarianAyat({ navigation }: Props) {
           {isFetching ? (
             <ActivityIndicator color={Colors.primary} />
           ) : (
-            <Pressable style={styles.searchButton}>
-              <Ionicons name="search" size={24} color={Colors.primary} />
+            <Pressable
+              style={styles.closeButton}
+              android_ripple={{ color: Colors.lightSemiTransparent }}
+              onPress={() => setSearch("")}
+            >
+              <Ionicons
+                name={search.length > 0 ? "close-circle" : "search"}
+                size={24}
+                color={Colors.primary}
+              />
             </Pressable>
           )}
         </View>

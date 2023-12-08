@@ -35,7 +35,7 @@ export default StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  searchButton: {},
+  closeButton: {},
   resultContainer: {
     flex: 1,
     marginTop: 20,
