@@ -17,8 +17,12 @@ import { useDebounce } from "use-debounce";
 import { useSearchQuery } from "redux/services/typesense";
 import RenderHtml from "react-native-render-html";
 import { generateHTML } from "utils";
+import { RootStackParamList } from "screens";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
-function PencarianAyat() {
+type Props = NativeStackScreenProps<RootStackParamList, "Pencarian Ayat">;
+
+function PencarianAyat({ navigation }: Props) {
   const [search, setSearch] = useState("");
   const [value] = useDebounce(search, 1000);
   const { width } = useWindowDimensions();
@@ -64,6 +68,7 @@ function PencarianAyat() {
           <Pressable
             style={styles.resultItem}
             android_ripple={{ color: Colors.lightSemiTransparent }}
+            onPress={() => navigation.navigate("Detail Ayat", item.document)}
           >
             <Text style={styles.suratText}>
               {item.document.nama_surah}:{item.document.nomor}
@@ -76,7 +81,7 @@ function PencarianAyat() {
             />
             <RenderHtml
               contentWidth={width}
-              source={generateHTML(item, "idn")}
+              source={generateHTML(item, "idn", true)}
               tagsStyles={{ p: styles.translationText }}
             />
           </Pressable>

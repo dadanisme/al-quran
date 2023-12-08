@@ -5,12 +5,14 @@ import DeteksiSuara from "./deteksi-suara";
 import DeteksiGambar from "./deteksi-gambar";
 import PencarianAyat from "./pencarian-ayat";
 import { Colors } from "utils/colors";
+import DetailAyat from "./detail-ayat";
 
 export type RootStackParamList = {
   Home: undefined;
   "Deteksi Suara": undefined;
   "Deteksi Gambar": undefined;
   "Pencarian Ayat": undefined;
+  "Detail Ayat": TypesenseAyat;
 };
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -32,6 +34,13 @@ export default function Screens() {
         <Stack.Screen name="Deteksi Suara" component={DeteksiSuara} />
         <Stack.Screen name="Deteksi Gambar" component={DeteksiGambar} />
         <Stack.Screen name="Pencarian Ayat" component={PencarianAyat} />
+        <Stack.Screen
+          name="Detail Ayat"
+          component={DetailAyat}
+          options={({ route }) => ({
+            title: `(${route.params.surah}) ${route.params.nama_surah}: ${route.params.nomor}`,
+          })}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
