@@ -27,21 +27,18 @@ function PencarianAyat({ navigation, route }: Props) {
 
   const [search, setSearch] = useState("");
   const [value] = useDebounce(search, 1000);
-  const [searchTranscripts, setSearchTranscripts] = useState(Boolean(arabic));
   const { width } = useWindowDimensions();
 
   const { data: result, isFetching } = useSearchQuery({
-    q: searchTranscripts ? arabic ?? "*" : value ?? "*",
+    q: value,
     query_by: "idn,tr,arWithoutDiacritics",
     page: 1,
     per_page: 30,
   });
 
   useEffect(() => {
-    if (value) {
-      setSearchTranscripts(false);
-    }
-  }, [value]);
+    if (arabic) setSearch(arabic);
+  }, [arabic]);
 
   return (
     <View style={styles.container}>
@@ -55,10 +52,8 @@ function PencarianAyat({ navigation, route }: Props) {
             placeholder="Cari terjemahan atau transliterasi"
             cursorColor={Colors.primary}
             enterKeyHint="search"
-            value={searchTranscripts ? arabic ?? "" : search}
-            onChangeText={
-              searchTranscripts ? undefined : (text) => setSearch(text)
-            }
+            value={search}
+            onChangeText={(text) => setSearch(text)}
             autoFocus
           />
           {isFetching ? (
