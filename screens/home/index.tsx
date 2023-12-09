@@ -51,8 +51,8 @@ export default function HomeScreen(props: Props) {
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Al-Qur'an</Text>
           <Text style={styles.subtitle}>
-            Powered by{" "}
-            <Text style={styles.subtitleBold}>AI & Google Cloud</Text>
+            &copy; Muhammad Ramdan | Powered by{" "}
+            <Text style={styles.subtitleBold}>AI & Cloud</Text>
           </Text>
         </View>
 
