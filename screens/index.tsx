@@ -11,7 +11,9 @@ export type RootStackParamList = {
   Home: undefined;
   "Deteksi Suara": undefined;
   "Deteksi Gambar": undefined;
-  "Pencarian Ayat": undefined;
+  "Pencarian Ayat": {
+    transcripts?: string[];
+  };
   "Detail Ayat": TypesenseAyat;
 };
 const Stack = createNativeStackNavigator<RootStackParamList>();

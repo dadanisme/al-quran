@@ -11,7 +11,7 @@ import {
 import styles from "./styles";
 import { Colors } from "utils/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 import { useSearchQuery } from "redux/services/typesense";
@@ -22,17 +22,31 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Pencarian Ayat">;
 
-function PencarianAyat({ navigation }: Props) {
+function PencarianAyat({ navigation, route }: Props) {
+  const { transcripts } = route.params;
+
   const [search, setSearch] = useState("");
   const [value] = useDebounce(search, 1000);
+  const [searchTranscripts, setSearchTranscripts] = useState(
+    Boolean(transcripts)
+  );
   const { width } = useWindowDimensions();
 
   const { data: result, isFetching } = useSearchQuery({
-    q: value ?? "*",
-    query_by: "idn,tr",
+    q: searchTranscripts ? transcripts?.[0] ?? "*" : value ?? "*",
+    query_by: searchTranscripts ? "transcripts" : "idn,tr",
     page: 1,
     per_page: 30,
   });
+
+  console.log(transcripts);
+  console.log(searchTranscripts);
+
+  useEffect(() => {
+    if (value) {
+      setSearchTranscripts(false);
+    }
+  }, [value]);
 
   return (
     <View style={styles.container}>

@@ -40,3 +40,16 @@ export const generateHTMLMatch = (
     )}</mark>...</p>`,
   };
 };
+
+export const convertProgress = (progress: string) => {
+  const converter = {
+    Queued: "Menunggu Antrian",
+    Started: "Memulai",
+    "Transcription Started": "Sedang Diproses",
+    "Transcription Completed": "Selesai Diproses",
+    Completed: "Selesai",
+    Failed: "Gagal",
+  };
+
+  return converter[progress as keyof typeof converter] ?? progress;
+};

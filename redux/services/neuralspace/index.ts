@@ -4,32 +4,17 @@ export const neuralspaceApi = createApi({
   reducerPath: "neuralspaceApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://voice.neuralspace.ai/api/v1",
+    headers: {
+      Authorization:
+        "sk_8a930c9bd9b37faac8230df45b459d82cc6536f30eca986f4448feea2ffbcb60",
+    },
   }),
   endpoints: (builder) => ({
     job: builder.query<NeuralSpaceJobResponse, string>({
       query: (jobId) => `/jobs/${jobId}`,
     }),
-    createJob: builder.mutation<CreateJobResponse, File>({
-      query: (file) => {
-        const formData = new FormData();
-        formData.append("files", file);
-        formData.append(
-          "config",
-          JSON.stringify({
-            file_transcription: { mode: "advanced", language_id: "ar" },
-            sentiment_detect: false,
-          })
-        );
-
-        return {
-          url: "/jobs",
-          method: "POST",
-          body: formData,
-        };
-      },
-    }),
   }),
 });
 
-export const { useJobQuery, useCreateJobMutation } = neuralspaceApi;
+export const { useJobQuery } = neuralspaceApi;
 export default neuralspaceApi;

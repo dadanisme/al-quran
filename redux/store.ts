@@ -4,6 +4,7 @@ import searchApi from "./services/typesense";
 import quranCloudApi from "./services/al-quran-cloud";
 import qcriApi from "./services/qcri";
 import neuralspaceApi from "./services/neuralspace";
+import serverApi from "./services/server";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     [quranCloudApi.reducerPath]: quranCloudApi.reducer,
     [qcriApi.reducerPath]: qcriApi.reducer,
     [neuralspaceApi.reducerPath]: neuralspaceApi.reducer,
+    [serverApi.reducerPath]: serverApi.reducer,
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -22,7 +24,8 @@ export const store = configureStore({
       searchApi.middleware,
       quranCloudApi.middleware,
       qcriApi.middleware,
-      neuralspaceApi.middleware
+      neuralspaceApi.middleware,
+      serverApi.middleware
     ),
 });
 

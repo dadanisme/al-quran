@@ -1,26 +1,65 @@
-import { View, Text, Pressable, Animated, Easing } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  Animated,
+  Easing,
+  ActivityIndicator,
+} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import styles from "./styles";
 import { Colors } from "utils/colors";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Audio } from "expo-av";
+import { useJobQuery } from "redux/services/neuralspace";
+import { useCreateJobMutation } from "redux/services/server";
+import { convertProgress } from "utils";
+import { useTransliterationQuery } from "redux/services/qcri";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "screens";
 
-export default function DeteksiSuara() {
+type Props = NativeStackScreenProps<RootStackParamList, "Deteksi Suara">;
+
+export default function DeteksiSuara({ navigation }: Props) {
   const [isPressing, setIsPressing] = useState(false);
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
   const [recordingResult, setRecordingResult] = useState<Audio.Sound | null>(
     null
   );
+  const [jobId, setJobId] = useState<string | null>(null);
+  const [stopFetching, setStopFetching] = useState(false);
+  const [loadingProcessing, setLoadingProcessing] = useState(false);
+
+  const [createJob, { isLoading }] = useCreateJobMutation();
+  const { data: job, isFetching } = useJobQuery(jobId!, {
+    skip: !jobId || stopFetching,
+    pollingInterval: 1000,
+  });
+  const { data: transcript, isLoading: loadingTranscript } =
+    useTransliterationQuery(job?.data?.result?.transcription.transcript ?? "", {
+      skip: !job?.data?.result?.transcription.transcript,
+    });
 
   const pressingAnimation = useRef(new Animated.Value(0)).current;
 
+  const loading = useMemo(() => {
+    if (loadingProcessing) return true;
+    if (!jobId) return false;
+    return (
+      isFetching ||
+      isLoading ||
+      job?.data.status !== "Completed" ||
+      loadingTranscript
+    );
+  }, [isFetching, isLoading, job, jobId, loadingTranscript, loadingProcessing]);
+
   const startRecording = async () => {
     try {
-      const { recording } = await Audio.Recording.createAsync(
+      const { recording: newRecording } = await Audio.Recording.createAsync(
         Audio.RecordingOptionsPresets.HIGH_QUALITY
       );
 
-      setRecording(recording);
+      setRecording(newRecording);
     } catch (error) {
       console.log(error);
     }
@@ -29,17 +68,39 @@ export default function DeteksiSuara() {
   const stopRecording = async () => {
     if (!recording) return;
     try {
+      setLoadingProcessing(true);
+      setStopFetching(false);
+      setJobId(null);
       await recording?.stopAndUnloadAsync();
 
       const { sound } = await recording?.createNewLoadedSoundAsync({
         volume: 1,
       });
 
-      const uri = recording?.getURI();
+      // get buffer
+      const uri = recording.getURI();
+      const response = await fetch(String(uri));
+      const blob = await response.blob();
+
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => {
+          resolve(String(reader.result));
+        };
+        reader.onerror = reject;
+      });
+
+      const res = await createJob(
+        base64.replace(/^data:audio\/\w+;base64,/, "")
+      );
+
+      if ("data" in res) setJobId(res.data.data.jobId);
 
       sound?.playAsync();
 
       setRecordingResult(sound);
+      setLoadingProcessing(false);
     } catch (error) {
       console.log(error);
     }
@@ -48,10 +109,6 @@ export default function DeteksiSuara() {
   // request permission
   useEffect(() => {
     Audio.requestPermissionsAsync();
-
-    return () => {
-      recording?.stopAndUnloadAsync();
-    };
   }, []);
 
   useEffect(() => {
@@ -62,6 +119,34 @@ export default function DeteksiSuara() {
       easing: Easing.inOut(Easing.ease),
     }).start();
   }, [isPressing]);
+
+  useEffect(() => {
+    if (job?.data.status === "Completed") {
+      setStopFetching(true);
+    }
+  }, [job]);
+
+  useEffect(() => {
+    if (!transcript) return;
+
+    navigation.navigate("Pencarian Ayat", {
+      transcripts: transcript.results,
+    });
+  }, [transcript]);
+
+  if (loading)
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color={Colors.primary} />
+        <Text style={[styles.title, { marginTop: 20 }]}>
+          {convertProgress(
+            jobId
+              ? String(job?.data.status ?? "Memproses rekaman")
+              : "Memproses rekaman"
+          ) ?? "Memproses rekaman"}
+        </Text>
+      </View>
+    );
 
   return (
     <View style={styles.container}>
@@ -93,7 +178,7 @@ export default function DeteksiSuara() {
             color: Colors.lightSemiTransparent,
             borderless: true,
           }}
-          onPressIn={() => {
+          onLongPress={() => {
             setIsPressing(true);
             startRecording();
           }}

@@ -6,11 +6,14 @@ export const qcriApi = createApi({
     baseUrl: "https://transliterate.qcri.org",
   }),
   endpoints: (builder) => ({
-    transliteration: builder.mutation<TransliterationResult, string>({
+    transliteration: builder.query<TransliterationResult, string>({
       query: (text) => `/ar2en/nbest/${text}`,
+      transformResponse: (response: { results: Record<string, string> }) => {
+        return { results: Object.values(response.results) };
+      },
     }),
   }),
 });
 
-export const { useTransliterationMutation } = qcriApi;
+export const { useTransliterationQuery } = qcriApi;
 export default qcriApi;
