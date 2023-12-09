@@ -14,7 +14,6 @@ import { Audio } from "expo-av";
 import { useJobQuery } from "redux/services/neuralspace";
 import { useCreateJobMutation } from "redux/services/server";
 import { convertProgress } from "utils";
-import { useTransliterationQuery } from "redux/services/qcri";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "screens";
 
@@ -23,9 +22,6 @@ type Props = NativeStackScreenProps<RootStackParamList, "Deteksi Suara">;
 export default function DeteksiSuara({ navigation }: Props) {
   const [isPressing, setIsPressing] = useState(false);
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
-  const [recordingResult, setRecordingResult] = useState<Audio.Sound | null>(
-    null
-  );
   const [jobId, setJobId] = useState<string | null>(null);
   const [stopFetching, setStopFetching] = useState(false);
   const [loadingProcessing, setLoadingProcessing] = useState(false);
@@ -35,23 +31,14 @@ export default function DeteksiSuara({ navigation }: Props) {
     skip: !jobId || stopFetching,
     pollingInterval: 1000,
   });
-  const { data: transcript, isLoading: loadingTranscript } =
-    useTransliterationQuery(job?.data?.result?.transcription.transcript ?? "", {
-      skip: !job?.data?.result?.transcription.transcript,
-    });
 
   const pressingAnimation = useRef(new Animated.Value(0)).current;
 
   const loading = useMemo(() => {
     if (loadingProcessing) return true;
     if (!jobId) return false;
-    return (
-      isFetching ||
-      isLoading ||
-      job?.data.status !== "Completed" ||
-      loadingTranscript
-    );
-  }, [isFetching, isLoading, job, jobId, loadingTranscript, loadingProcessing]);
+    return isFetching || isLoading || job?.data.status !== "Completed";
+  }, [isFetching, isLoading, job, jobId, loadingProcessing]);
 
   const startRecording = async () => {
     try {
@@ -75,6 +62,7 @@ export default function DeteksiSuara({ navigation }: Props) {
 
       const { sound } = await recording?.createNewLoadedSoundAsync({
         volume: 1,
+        isLooping: true,
       });
 
       // get buffer
@@ -99,7 +87,6 @@ export default function DeteksiSuara({ navigation }: Props) {
 
       sound?.playAsync();
 
-      setRecordingResult(sound);
       setLoadingProcessing(false);
     } catch (error) {
       console.log(error);
@@ -123,16 +110,11 @@ export default function DeteksiSuara({ navigation }: Props) {
   useEffect(() => {
     if (job?.data.status === "Completed") {
       setStopFetching(true);
+      navigation.navigate("Pencarian Ayat", {
+        arabic: job?.data.result.transcription.transcript,
+      });
     }
   }, [job]);
-
-  useEffect(() => {
-    if (!transcript) return;
-
-    navigation.navigate("Pencarian Ayat", {
-      transcripts: transcript.results,
-    });
-  }, [transcript]);
 
   if (loading)
     return (

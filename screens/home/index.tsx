@@ -32,8 +32,9 @@ export default function HomeScreen(props: Props) {
       screen: "Deteksi Suara",
     },
     {
-      text: "Deteksi Gambar",
+      text: "Deteksi Gambar (Coming Soon)",
       screen: "Deteksi Gambar",
+      disabled: true,
     },
   ];
 
@@ -60,6 +61,7 @@ export default function HomeScreen(props: Props) {
             <Button
               key={index}
               onPress={() => props.navigation.navigate(menu.screen as never)}
+              disabled={menu.disabled}
             >
               <Text style={styles.menuText}>{menu.text}</Text>
             </Button>

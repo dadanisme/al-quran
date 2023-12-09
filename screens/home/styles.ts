@@ -55,7 +55,7 @@ export default StyleSheet.create({
     width: "70%",
   },
   menuText: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "500",
     color: Colors.dark,
     textTransform: "uppercase",

@@ -23,24 +23,19 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 type Props = NativeStackScreenProps<RootStackParamList, "Pencarian Ayat">;
 
 function PencarianAyat({ navigation, route }: Props) {
-  const { transcripts } = route.params;
+  const { arabic } = route.params;
 
   const [search, setSearch] = useState("");
   const [value] = useDebounce(search, 1000);
-  const [searchTranscripts, setSearchTranscripts] = useState(
-    Boolean(transcripts)
-  );
+  const [searchTranscripts, setSearchTranscripts] = useState(Boolean(arabic));
   const { width } = useWindowDimensions();
 
   const { data: result, isFetching } = useSearchQuery({
-    q: searchTranscripts ? transcripts?.[0] ?? "*" : value ?? "*",
-    query_by: searchTranscripts ? "transcripts" : "idn,tr",
+    q: searchTranscripts ? arabic ?? "*" : value ?? "*",
+    query_by: "idn,tr,arWithoutDiacritics",
     page: 1,
     per_page: 30,
   });
-
-  console.log(transcripts);
-  console.log(searchTranscripts);
 
   useEffect(() => {
     if (value) {
@@ -60,8 +55,10 @@ function PencarianAyat({ navigation, route }: Props) {
             placeholder="Cari terjemahan atau transliterasi"
             cursorColor={Colors.primary}
             enterKeyHint="search"
-            value={search}
-            onChangeText={(text) => setSearch(text)}
+            value={searchTranscripts ? arabic ?? "" : search}
+            onChangeText={
+              searchTranscripts ? undefined : (text) => setSearch(text)
+            }
             autoFocus
           />
           {isFetching ? (
@@ -105,6 +102,11 @@ function PencarianAyat({ navigation, route }: Props) {
               contentWidth={width}
               source={generateHTML(item, "idn", true)}
               tagsStyles={{ p: styles.translationText }}
+            />
+            <RenderHtml
+              contentWidth={width}
+              source={generateHTML(item, "arWithoutDiacritics")}
+              tagsStyles={{ p: styles.transliterationText }}
             />
           </Pressable>
         )}

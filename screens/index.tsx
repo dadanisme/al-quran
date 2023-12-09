@@ -12,7 +12,7 @@ export type RootStackParamList = {
   "Deteksi Suara": undefined;
   "Deteksi Gambar": undefined;
   "Pencarian Ayat": {
-    transcripts?: string[];
+    arabic?: string;
   };
   "Detail Ayat": TypesenseAyat;
 };
@@ -35,7 +35,11 @@ export default function Screens() {
         />
         <Stack.Screen name="Deteksi Suara" component={DeteksiSuara} />
         <Stack.Screen name="Deteksi Gambar" component={DeteksiGambar} />
-        <Stack.Screen name="Pencarian Ayat" component={PencarianAyat} />
+        <Stack.Screen
+          name="Pencarian Ayat"
+          component={PencarianAyat}
+          initialParams={{ arabic: undefined }}
+        />
         <Stack.Screen
           name="Detail Ayat"
           component={DetailAyat}

@@ -8,4 +8,5 @@ interface TypesenseAyat {
   idn: string;
   tafsir: string;
   nama_surah: string;
+  arWithoutDiacritics: string;
 }
