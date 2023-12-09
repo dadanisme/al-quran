@@ -19,7 +19,7 @@ export const generateHTML = (
     html: `<p>${
       snippet
         ? pureStringSnippet?.length !== pureStringDocument.length
-          ? `${snippet}...`
+          ? `...${snippet}...`
           : snippet
         : slice
         ? String(document).length > 100
