@@ -60,11 +60,6 @@ export default function DeteksiSuara({ navigation }: Props) {
       setJobId(null);
       await recording?.stopAndUnloadAsync();
 
-      const { sound } = await recording?.createNewLoadedSoundAsync({
-        volume: 1,
-        isLooping: true,
-      });
-
       // get buffer
       const uri = recording.getURI();
       const response = await fetch(String(uri));
@@ -84,8 +79,6 @@ export default function DeteksiSuara({ navigation }: Props) {
       );
 
       if ("data" in res) setJobId(res.data.data.jobId);
-
-      sound?.playAsync();
 
       setLoadingProcessing(false);
     } catch (error) {
