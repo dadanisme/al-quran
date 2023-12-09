@@ -26,7 +26,7 @@ async function initialize() {
 
 async function importAyat() {
   const ayatJsonl = fs.readFileSync(
-    "../dataset/ayat-with-transcripts.jsonl",
+    "../dataset/ayat-without-diacritics.jsonl",
     "utf8"
   );
 
