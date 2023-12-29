@@ -6,7 +6,7 @@ import { store } from "redux/store";
 export default function App() {
   return (
     <Provider store={store}>
-      <StatusBar style="auto" />
+      <StatusBar style="dark" />
       <Screens />
     </Provider>
   );

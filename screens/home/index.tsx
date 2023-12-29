@@ -5,6 +5,7 @@ import {
   ImageBackground,
   PressableProps,
   Pressable,
+  Linking,
 } from "react-native";
 import { RootStackParamList } from "screens/index";
 import styles from "./styles";
@@ -49,9 +50,9 @@ export default function HomeScreen(props: Props) {
         imageStyle={styles.backgroundImageStyle}
       >
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Al-Qur'an</Text>
+          <Text style={styles.title}>AyaSeek AI</Text>
           <Text style={styles.subtitle}>
-            &copy; Muhammad Ramdan | Powered by{" "}
+            Aplikasi pencarian ayat Al-Qur'an berbasis{" "}
             <Text style={styles.subtitleBold}>AI & Cloud</Text>
           </Text>
         </View>
@@ -66,6 +67,17 @@ export default function HomeScreen(props: Props) {
               <Text style={styles.menuText}>{menu.text}</Text>
             </Button>
           ))}
+        </View>
+
+        <View style={styles.footerContainer}>
+          <Text style={styles.footerText}>&copy; 2023 by </Text>
+          <Pressable
+            onPress={() =>
+              Linking.openURL("https://www.linkedin.com/in/dadanisme")
+            }
+          >
+            <Text style={styles.footerTextBold}>Muhammad Ramdan</Text>
+          </Pressable>
         </View>
       </ImageBackground>
     </LinearGradient>

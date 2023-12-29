@@ -1,28 +1,30 @@
 {
   "expo": {
-    "name": "Al-Quran dengan AI",
-    "slug": "al-quran-dengan-ai",
+    "name": "AyaSeek AI",
+    "slug": "ayaseek-ai",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "buildNumber": "1.0.0",
-      "bundleIdentifier": "com.muhammadramdan.al_quran_dengan_ai"
+      "bundleIdentifier": "com.muhammadramdan.ayaseekai"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.muhammadramdan.al_quran_dengan_ai",
+      "package": "com.muhammadramdan.ayaseekai",
       "versionCode": 1
     },
     "web": {
@@ -31,17 +33,17 @@
     "experiments": {
       "tsconfigPaths": true
     },
-    "extra": {
-      "eas": {
-        "projectId": "00ecd3e8-4187-49c0-8c52-15dd2af5b632"
-      }
-    },
     "owner": "dadanisme",
     "runtimeVersion": "1.0.0",
     "updates": {
-      "url": "https://u.expo.dev/00ecd3e8-4187-49c0-8c52-15dd2af5b632",
+      "url": "https://u.expo.dev/c791381e-8323-47fc-bb09-146e25a5152b",
       "requestHeaders": {
         "expo-channel-name": "main"
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c791381e-8323-47fc-bb09-146e25a5152b"
       }
     }
   }

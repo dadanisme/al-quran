@@ -61,4 +61,22 @@ export default StyleSheet.create({
     textTransform: "uppercase",
     textAlign: "center",
   },
+  footerContainer: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 30,
+    flexDirection: "row",
+  },
+  footerText: {
+    fontSize: 12,
+    color: Colors.dark,
+    textAlign: "center",
+  },
+  footerTextBold: {
+    fontSize: 12,
+    fontWeight: "bold",
+    color: Colors.dark,
+    textAlign: "center",
+  },
 });
