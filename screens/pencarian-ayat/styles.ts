@@ -84,4 +84,18 @@ export default StyleSheet.create({
     color: Colors.dark,
     textAlign: "center",
   },
+  resultInfoContainer: {
+    width: "100%",
+    marginTop: 3,
+    alignItems: "center",
+  },
+  resultInfoText: {
+    fontSize: 12,
+    color: Colors.dark,
+  },
+  resultInfoTextHighlight: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: Colors.dark,
+  },
 });

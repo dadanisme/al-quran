@@ -11,7 +11,7 @@ import {
 import styles from "./styles";
 import { Colors } from "utils/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { useDebounce } from "use-debounce";
 
 import { useSearchQuery } from "redux/services/typesense";
@@ -23,7 +23,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 type Props = NativeStackScreenProps<RootStackParamList, "Pencarian Ayat">;
 
 function PencarianAyat({ navigation, route }: Props) {
-  const { arabic } = route.params;
+  const { arabic, processingTime, audioLength } = route.params;
 
   const [search, setSearch] = useState("");
   const [value] = useDebounce(search, 1000);
@@ -36,12 +36,36 @@ function PencarianAyat({ navigation, route }: Props) {
     per_page: 30,
   });
 
+  const { time, found } = useMemo(() => {
+    if (!result) return { time: 0, found: 0 };
+    return { time: result.search_time_ms, found: result.found };
+  }, [result]);
+
   useEffect(() => {
     if (arabic) setSearch(arabic);
   }, [arabic]);
 
   return (
     <View style={styles.container}>
+      {processingTime && audioLength && search === arabic && (
+        <View
+          style={[
+            styles.resultInfoContainer,
+            { marginTop: 0, marginBottom: 20 },
+          ]}
+        >
+          <Text style={styles.resultInfoText}>
+            Audio{" "}
+            <Text style={styles.resultInfoTextHighlight}>
+              {(audioLength / 1000).toFixed(2)} detik
+            </Text>{" "}
+            diproses dalam{" "}
+            <Text style={styles.resultInfoTextHighlight}>
+              {(processingTime / 1000).toFixed(2)} detik
+            </Text>
+          </Text>
+        </View>
+      )}
       <KeyboardAvoidingView
         behavior="padding"
         style={styles.searchContainer}
@@ -73,6 +97,14 @@ function PencarianAyat({ navigation, route }: Props) {
           )}
         </View>
       </KeyboardAvoidingView>
+
+      <View style={styles.resultInfoContainer}>
+        <Text style={styles.resultInfoText}>
+          <Text style={styles.resultInfoTextHighlight}>{found}</Text> hasil
+          ditemukan dalam{" "}
+          <Text style={styles.resultInfoTextHighlight}>{time} milidetik</Text>
+        </Text>
+      </View>
 
       <FlatList
         style={styles.resultContainer}

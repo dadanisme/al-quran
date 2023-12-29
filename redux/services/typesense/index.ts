@@ -15,7 +15,7 @@ const searchApi = createApi({
           .collections<TypesenseAyat>("ayat")
           .documents()
           .search(arg, {
-            cacheSearchResultsForSeconds: 60 * 60 * 6, // 6 hours
+            // cacheSearchResultsForSeconds: 60 * 60 * 6, // 6 hours
           })) as SearchResponse<TypesenseAyat>;
 
         return { data: result };

@@ -31,6 +31,10 @@ export default function DeteksiSuara({ navigation }: Props) {
     skip: !jobId || stopFetching,
     pollingInterval: 1000,
   });
+  const [audioLength, setAudioLength] = useState(0);
+
+  const start = useRef(0);
+  const end = useRef(0);
 
   const pressingAnimation = useRef(new Animated.Value(0)).current;
 
@@ -59,6 +63,12 @@ export default function DeteksiSuara({ navigation }: Props) {
       setStopFetching(false);
       setJobId(null);
       await recording?.stopAndUnloadAsync();
+
+      // get audio length
+      const info = await recording.getStatusAsync();
+      setAudioLength(info.durationMillis);
+
+      start.current = Date.now();
 
       // get buffer
       const uri = recording.getURI();
@@ -103,8 +113,11 @@ export default function DeteksiSuara({ navigation }: Props) {
   useEffect(() => {
     if (job?.data.status === "Completed") {
       setStopFetching(true);
+      end.current = Date.now();
       navigation.navigate("Pencarian Ayat", {
         arabic: job?.data.result.transcription.transcript,
+        processingTime: end.current - start.current,
+        audioLength,
       });
     }
   }, [job]);

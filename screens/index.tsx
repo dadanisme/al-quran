@@ -13,6 +13,8 @@ export type RootStackParamList = {
   "Deteksi Gambar": undefined;
   "Pencarian Ayat": {
     arabic?: string;
+    processingTime?: number;
+    audioLength?: number;
   };
   "Detail Ayat": TypesenseAyat;
 };
