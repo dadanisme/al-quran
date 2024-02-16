@@ -6,7 +6,7 @@ export const neuralspaceApi = createApi({
     baseUrl: "https://voice.neuralspace.ai/api/v1",
     headers: {
       Authorization:
-        "sk_8a930c9bd9b37faac8230df45b459d82cc6536f30eca986f4448feea2ffbcb60",
+        "sk_d49d72f99db80b3de8358cb40d30b7b83fbfad320d3515d15f69069a2ee58053",
     },
   }),
   endpoints: (builder) => ({
