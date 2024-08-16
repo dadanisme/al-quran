@@ -4,12 +4,12 @@ const fs = require("fs");
 const client = new Client({
   nodes: [
     {
-      host: "l4kbshr1jayo6tg7p-1.a1.typesense.net",
+      host: "dguhimexws2lfy3qp-1.a1.typesense.net",
       port: "443",
       protocol: "https",
     },
   ],
-  apiKey: "UfP5nxP5Y66unQULQhgEtfyOo5p7hblz",
+  apiKey: "ebHSd9m9wkGdBa5wLVokPhpcHaQdnyhC",
 });
 
 const log = console.log;
