@@ -5,17 +5,18 @@ import {
   ImageBackground,
   PressableProps,
   Pressable,
-  Linking,
+  TextInput,
 } from "react-native";
 import { RootStackParamList } from "screens/index";
 import styles from "./styles";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "utils/colors";
-import useUser from "hooks/use-user";
-import { signOut } from "firebase/auth";
-import { auth } from "services/firebase";
 
-type Props = NativeStackScreenProps<RootStackParamList, "Home">;
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "services/firebase";
+import { useState } from "react";
+
+type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
 const Button = (props: PressableProps) => (
   <Pressable
@@ -26,18 +27,17 @@ const Button = (props: PressableProps) => (
 );
 
 export default function HomeScreen(props: Props) {
-  const menus = [
-    {
-      text: "Pencarian Ayat",
-      screen: "Pencarian Ayat",
-    },
-    {
-      text: "Deteksi Suara",
-      screen: "Deteksi Suara",
-    },
-  ];
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const { user } = useUser();
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      props.navigation.navigate("Home");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <LinearGradient
@@ -50,7 +50,7 @@ export default function HomeScreen(props: Props) {
         imageStyle={styles.backgroundImageStyle}
       >
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>AyaSeek AI</Text>
+          <Text style={styles.title}>Login</Text>
           <Text style={styles.subtitle}>
             Aplikasi pencarian ayat Al-Qur'an berbasis{" "}
             <Text style={styles.subtitleBold}>AI & Cloud</Text>
@@ -58,27 +58,25 @@ export default function HomeScreen(props: Props) {
         </View>
 
         <View style={styles.menuContainer}>
-          {menus.map((menu, index) => (
-            <Button
-              key={index}
-              onPress={() => props.navigation.navigate(menu.screen as never)}
-              // disabled={menu.disabled}
-            >
-              <Text style={styles.menuText}>{menu.text}</Text>
-            </Button>
-          ))}
-        </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            placeholderTextColor={Colors.dark}
+            value={email}
+            onChangeText={setEmail}
+          />
 
-        <View style={styles.footerContainer}>
-          <Text style={styles.footerText}>
-            Masuk sebagai{" "}
-            <Text style={styles.footerTextBold}>
-              {user?.email ?? "Pengguna"}
-            </Text>
-            {", "}
-          </Text>
-          <Pressable onPress={() => signOut(auth)}>
-            <Text style={styles.footerTextUnderline}>Keluar</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            placeholderTextColor={Colors.dark}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={true}
+          />
+
+          <Pressable style={styles.submitButton} onPress={handleLogin}>
+            <Text style={styles.submitText}>Login</Text>
           </Pressable>
         </View>
       </ImageBackground>

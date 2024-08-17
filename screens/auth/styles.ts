@@ -44,7 +44,6 @@ export default StyleSheet.create({
   menuContainer: {
     width: "100%",
     alignItems: "center",
-    gap: 10,
   },
   menuButton: {
     borderColor: Colors.dark,
@@ -79,9 +78,33 @@ export default StyleSheet.create({
     color: Colors.dark,
     textAlign: "center",
   },
-  footerTextUnderline: {
-    fontSize: 12,
+
+  // forms
+  input: {
+    borderColor: Colors.dark,
+    borderWidth: 1.3,
+    backgroundColor: Colors.lightSemiTransparent,
+    borderRadius: Constants.borderRadius,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    width: "70%",
+    marginBottom: 10,
+  },
+  submitButton: {
+    borderColor: Colors.dark,
+    borderWidth: 1.3,
+    backgroundColor: Colors.light,
+    borderRadius: Constants.borderRadius,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    width: "70%",
+    marginBottom: 10,
+  },
+  submitText: {
+    fontSize: 14,
+    fontWeight: "500",
     color: Colors.dark,
-    textDecorationLine: "underline",
+    textTransform: "uppercase",
+    textAlign: "center",
   },
 });
