@@ -35,6 +35,10 @@ export default function HomeScreen(props: Props) {
       text: "Deteksi Suara",
       screen: "Deteksi Suara",
     },
+    {
+      text: "Pilih Surat",
+      screen: "Pilih Surat",
+    },
   ];
 
   const { user } = useUser();

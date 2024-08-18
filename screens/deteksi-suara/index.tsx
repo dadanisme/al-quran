@@ -19,7 +19,8 @@ import { RootStackParamList } from "screens";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Deteksi Suara">;
 
-export default function DeteksiSuara({ navigation }: Props) {
+export default function DeteksiSuara({ navigation, route }: Props) {
+  const { ayat, nomor } = route?.params ?? {};
   const [isPressing, setIsPressing] = useState(false);
   const [recording, setRecording] = useState<Audio.Recording | null>(null);
   const [jobId, setJobId] = useState<string | null>(null);
@@ -86,13 +87,14 @@ export default function DeteksiSuara({ navigation }: Props) {
 
       const res = await createJob(
         base64.replace(/^data:audio\/\w+;base64,/, "")
-      );
+      ).unwrap();
 
-      if ("data" in res) setJobId(res.data.data.jobId);
+      setJobId(res.data.jobId);
 
       setLoadingProcessing(false);
     } catch (error) {
       console.log(error);
+      setLoadingProcessing(false);
     }
   };
 
@@ -118,6 +120,8 @@ export default function DeteksiSuara({ navigation }: Props) {
         arabic: job?.data.result.transcription.transcript,
         processingTime: end.current - start.current,
         audioLength,
+        nomor,
+        ayat,
       });
     }
   }, [job]);

@@ -63,4 +63,27 @@ export default StyleSheet.create({
     fontWeight: "600",
     color: Colors.dark,
   },
+  accuracyContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 10,
+    borderTopColor: Colors.dark,
+    borderTopWidth: 1,
+  },
+  accuracyText: {
+    fontSize: 14,
+    color: Colors.dark,
+  },
+  accuracyTextSuccess: {
+    color: Colors.dark,
+    fontWeight: "600",
+  },
+  accuracyTextFail: {
+    color: Colors.error,
+    fontWeight: "600",
+  },
+  accuracyTextWarning: {
+    color: Colors.warning,
+    fontWeight: "600",
+  },
 });

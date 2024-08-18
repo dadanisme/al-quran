@@ -41,6 +41,11 @@ export const generateHTMLMatch = (
   };
 };
 
+export const sliceText = (text: string, length?: number) => {
+  if (!length) return text.length > 30 ? `${text.slice(0, 30)}...` : text;
+  return text.length > length ? `${text.slice(0, length)}...` : text;
+};
+
 export const convertProgress = (progress: string) => {
   const converter = {
     Queued: "Menunggu Antrian",
@@ -52,4 +57,8 @@ export const convertProgress = (progress: string) => {
   };
 
   return converter[progress as keyof typeof converter] ?? progress;
+};
+
+export const removeDiactritics = (text: string) => {
+  return text.normalize("NFD").replace(/\p{Diacritic}/gu, "");
 };

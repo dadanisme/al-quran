@@ -16,14 +16,19 @@ import { useDebounce } from "use-debounce";
 
 import { useSearchQuery } from "redux/services/typesense";
 import RenderHtml from "react-native-render-html";
-import { generateHTML } from "utils";
+import { generateHTML, removeDiactritics } from "utils";
 import { RootStackParamList } from "screens";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { distance } from "fastest-levenshtein";
+
+const arabicTagsStyles = { p: styles.arabicText };
+const transliterationTagsStyles = { p: styles.transliterationText };
+const translationTagsStyles = { p: styles.translationText };
 
 type Props = NativeStackScreenProps<RootStackParamList, "Pencarian Ayat">;
 
 function PencarianAyat({ navigation, route }: Props) {
-  const { arabic, processingTime, audioLength } = route.params;
+  const { arabic, processingTime, audioLength, nomor, ayat } = route.params;
 
   const [search, setSearch] = useState("");
   const [value] = useDebounce(search, 1000);
@@ -31,7 +36,7 @@ function PencarianAyat({ navigation, route }: Props) {
 
   const { data: result, isFetching } = useSearchQuery({
     q: value,
-    query_by: "idn,tr,arWithoutDiacritics",
+    query_by: "idn,tr,arWithoutDiacritics,ar",
     page: 1,
     per_page: 30,
   });
@@ -44,6 +49,31 @@ function PencarianAyat({ navigation, route }: Props) {
   useEffect(() => {
     if (arabic) setSearch(arabic);
   }, [arabic]);
+
+  useEffect(() => {
+    if (nomor && ayat) {
+      const bestResult = result?.hits?.[0].document;
+
+      if (bestResult) {
+        let percentage = 0;
+        if (bestResult?.nomor === ayat && bestResult?.surah === nomor) {
+          const distanceArabic = distance(
+            removeDiactritics("مِنَ الْجِنَّةِ وَالنَّاسِ").trim(),
+            bestResult?.arWithoutDiacritics.trim()
+          );
+
+          // Calculate the percentage of similarity
+          percentage = 1 - distanceArabic / Math.max(bestResult?.ar?.length, 1);
+        }
+
+        navigation.navigate("Detail Ayat", {
+          ...bestResult,
+          item: result?.hits?.[0],
+          percentage: percentage * 100,
+        });
+      }
+    }
+  }, [nomor, ayat, result]);
 
   return (
     <View style={styles.container}>
@@ -119,21 +149,25 @@ function PencarianAyat({ navigation, route }: Props) {
             <Text style={styles.suratText}>
               {item.document.nama_surah}:{item.document.nomor}
             </Text>
-            <Text style={styles.arabicText}>{item.document.ar}</Text>
+            <RenderHtml
+              contentWidth={width}
+              source={generateHTML(item, "ar")}
+              tagsStyles={arabicTagsStyles}
+            />
             <RenderHtml
               contentWidth={width}
               source={generateHTML(item, "tr")}
-              tagsStyles={{ p: styles.transliterationText }}
+              tagsStyles={transliterationTagsStyles}
             />
             <RenderHtml
               contentWidth={width}
               source={generateHTML(item, "idn", true)}
-              tagsStyles={{ p: styles.translationText }}
+              tagsStyles={translationTagsStyles}
             />
             <RenderHtml
               contentWidth={width}
               source={generateHTML(item, "arWithoutDiacritics")}
-              tagsStyles={{ p: styles.transliterationText }}
+              tagsStyles={transliterationTagsStyles}
             />
           </Pressable>
         )}

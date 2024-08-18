@@ -11,18 +11,34 @@ import useUser from "hooks/use-user";
 import { LinearGradient } from "expo-linear-gradient";
 import styles from "./home/styles";
 import { ImageBackground } from "react-native";
+import PilihSurat from "./pilih-surat";
+import PilihAyat from "./pilih-ayat";
+import { SearchResponseHit } from "typesense/lib/Typesense/Documents";
 
 export type RootStackParamList = {
   Home: undefined;
-  "Deteksi Suara": undefined;
+  "Deteksi Suara": {
+    nomor?: number;
+    ayat?: number;
+    nama_surah?: string;
+  };
   "Deteksi Gambar": undefined;
   "Pencarian Ayat": {
     arabic?: string;
     processingTime?: number;
     audioLength?: number;
+    nomor?: number;
+    ayat?: number;
   };
-  "Detail Ayat": TypesenseAyat;
+  "Detail Ayat": TypesenseAyat & {
+    item?: SearchResponseHit<TypesenseAyat>;
+    percentage?: number;
+  };
   Login: undefined;
+  "Pilih Surat": undefined;
+  "Pilih Ayat": {
+    nomor: number;
+  };
 };
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -60,7 +76,16 @@ export default function Screens() {
               component={HomeScreen}
               options={{ headerShown: false }}
             />
-            <Stack.Screen name="Deteksi Suara" component={DeteksiSuara} />
+            <Stack.Screen
+              name="Deteksi Suara"
+              component={DeteksiSuara}
+              options={({ route }) => ({
+                title:
+                  route.params?.nama_surah && route.params?.ayat
+                    ? `${route.params?.nama_surah}: ${route.params?.ayat}`
+                    : "Deteksi Suara",
+              })}
+            />
             <Stack.Screen name="Deteksi Gambar" component={DeteksiGambar} />
             <Stack.Screen
               name="Pencarian Ayat"
@@ -74,6 +99,8 @@ export default function Screens() {
                 title: `(${route.params.surah}) ${route.params.nama_surah}: ${route.params.nomor}`,
               })}
             />
+            <Stack.Screen name="Pilih Surat" component={PilihSurat} />
+            <Stack.Screen name="Pilih Ayat" component={PilihAyat} />
           </>
         ) : (
           <Stack.Screen

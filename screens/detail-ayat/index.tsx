@@ -1,4 +1,10 @@
-import { View, Text, ScrollView, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  useWindowDimensions,
+} from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "screens";
 import styles from "./styles";
@@ -7,14 +13,19 @@ import { Audio } from "expo-av";
 import { useEffect, useMemo, useState } from "react";
 import { Colors } from "utils/colors";
 import { useSoundQuery } from "redux/services/al-quran-cloud";
+import RenderHtml from "react-native-render-html";
+import { generateHTML } from "utils";
+
+const tagsStyles = { p: styles.arabicText };
 
 type Props = NativeStackScreenProps<RootStackParamList, "Detail Ayat">;
 
-export default function DetailAyat({ navigation, route }: Props) {
-  const ayat = route.params;
+export default function DetailAyat({ route }: Props) {
+  const { item, percentage, ...ayat } = route.params;
   const [loadingSound, setLoadingSound] = useState(false);
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const { width } = useWindowDimensions();
 
   const { data, isLoading } = useSoundQuery(ayat.itemId);
 
@@ -81,8 +92,35 @@ export default function DetailAyat({ navigation, route }: Props) {
           )}
           <Text style={styles.audioTextHeader}>Ayat</Text>
         </View>
-        <Text style={styles.arabicText}>{ayat.ar}</Text>
+        {item ? (
+          <RenderHtml
+            contentWidth={width}
+            source={generateHTML(item, "ar")}
+            tagsStyles={tagsStyles}
+          />
+        ) : (
+          <Text style={styles.arabicText}>{ayat.ar}</Text>
+        )}
         <Text style={styles.transliterationText}>{ayat.tr}</Text>
+
+        {percentage && (
+          <View style={styles.accuracyContainer}>
+            <Text style={styles.accuracyText}>
+              Akurasi:{" "}
+              <Text
+                style={
+                  percentage > 90
+                    ? styles.accuracyTextSuccess
+                    : percentage > 70
+                    ? styles.accuracyTextWarning
+                    : styles.accuracyTextFail
+                }
+              >
+                {percentage.toFixed(2)}%
+              </Text>
+            </Text>
+          </View>
+        )}
       </View>
 
       <View style={styles.textContainer}>

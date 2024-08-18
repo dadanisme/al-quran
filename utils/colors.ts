@@ -8,4 +8,6 @@ export const Colors = {
   white: "#FFFFFF",
   black: "#000000",
   transparent: "rgba(0,0,0,0)",
+  error: "#FF0000",
+  warning: "#FFA500",
 };
