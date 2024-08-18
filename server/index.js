@@ -17,41 +17,46 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", jsonParser, async (req, res) => {
-  const { data } = req.body;
+  try {
+    const { data } = req.body;
 
-  const audioName = `${new Date().getTime()}.wav`;
-  // data is base64 encoded of audio file
-  // convert it to File
-  const buff = Buffer.from(data, "base64");
-  const file = new File([buff], audioName, { type: "audio/wav" });
+    const audioName = `${new Date().getTime()}.wav`;
+    // data is base64 encoded of audio file
+    // convert it to File
+    const buff = Buffer.from(data, "base64");
+    const file = new File([buff], audioName, { type: "audio/wav" });
 
-  var myHeaders = new Headers();
-  myHeaders.append(
-    "Authorization",
-    "sk_bf38daae3695cbb8ed2c320b2cb275178c6ecbfc4c8b3f6cff1584bba4164d73"
-  );
+    var myHeaders = new Headers();
+    myHeaders.append(
+      "Authorization",
+      "sk_bf38daae3695cbb8ed2c320b2cb275178c6ecbfc4c8b3f6cff1584bba4164d73"
+    );
 
-  var formdata = new FormData();
-  formdata.append("files", file);
-  formdata.append(
-    "config",
-    '{"file_transcription":{"mode":"advanced","language_id":"ar"},"sentiment_detect":false}'
-  );
+    var formdata = new FormData();
+    formdata.append("files", file);
+    formdata.append(
+      "config",
+      '{"file_transcription":{"mode":"advanced","language_id":"ar"},"sentiment_detect":false}'
+    );
 
-  var requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    body: formdata,
-    redirect: "follow",
-  };
+    var requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
 
-  const response = await fetch(
-    "https://voice.neuralspace.ai/api/v1/jobs",
-    requestOptions
-  );
-  const resData = await response.json();
+    const response = await fetch(
+      "https://voice.neuralspace.ai/api/v1/jobs",
+      requestOptions
+    );
+    const resData = await response.json();
 
-  res.send(resData);
+    res.send(resData);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
 });
 
 // Initialize server
