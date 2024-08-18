@@ -17,6 +17,7 @@ import RenderHtml from "react-native-render-html";
 import { generateHTML } from "utils";
 
 const tagsStyles = { p: styles.arabicText };
+const transliterationTagsStyles = { p: styles.transliterationText };
 
 type Props = NativeStackScreenProps<RootStackParamList, "Detail Ayat">;
 
@@ -119,6 +120,13 @@ export default function DetailAyat({ route }: Props) {
                 {percentage.toFixed(2)}%
               </Text>
             </Text>
+            {item ? (
+              <RenderHtml
+                contentWidth={width}
+                source={generateHTML(item, "arWithoutDiacritics")}
+                tagsStyles={transliterationTagsStyles}
+              />
+            ) : null}
           </View>
         ) : null}
       </View>
