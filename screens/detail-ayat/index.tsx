@@ -103,7 +103,7 @@ export default function DetailAyat({ route }: Props) {
         )}
         <Text style={styles.transliterationText}>{ayat.tr}</Text>
 
-        {percentage && (
+        {percentage !== undefined ? (
           <View style={styles.accuracyContainer}>
             <Text style={styles.accuracyText}>
               Akurasi:{" "}
@@ -120,7 +120,7 @@ export default function DetailAyat({ route }: Props) {
               </Text>
             </Text>
           </View>
-        )}
+        ) : null}
       </View>
 
       <View style={styles.textContainer}>

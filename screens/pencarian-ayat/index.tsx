@@ -51,14 +51,14 @@ function PencarianAyat({ navigation, route }: Props) {
   }, [arabic]);
 
   useEffect(() => {
-    if (nomor && ayat) {
+    if (nomor && ayat && arabic !== undefined) {
       const bestResult = result?.hits?.[0].document;
 
       if (bestResult) {
         let percentage = 0;
         if (bestResult?.nomor === ayat && bestResult?.surah === nomor) {
           const distanceArabic = distance(
-            removeDiactritics("مِنَ الْجِنَّةِ وَالنَّاسِ").trim(),
+            removeDiactritics(arabic).trim(),
             bestResult?.arWithoutDiacritics.trim()
           );
 
